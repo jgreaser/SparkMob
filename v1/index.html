@@ -1,0 +1,97 @@
+<html>
+
+<head>
+    <title>FLVS Innovation Working For You</title>
+</head>
+
+<script src="lib/angular.js"></script>
+
+<script src="lib/ui-bootstrap.js"></script>
+<script src="app.js"></script>
+<script src="trello.controller.js"></script>
+<script src="trello.service.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="https://api.trello.com/1/client.js?key=354728fd3b260ae763e45243a82da439"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
+
+<!---->
+<link href="https://fonts.googleapis.com/css?family=Galada" rel="stylesheet">
+
+
+<!---->
+
+<style>
+    .logo {
+        margin-top: 0px;
+        margin-left: 0px;
+    }
+    
+    button {
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+    
+    body {
+        background-color: #f1f1f1;
+    }
+    
+    h1,h2 {
+        color: #222222;
+      
+        font-family: 'helvetica', serif;
+    }
+</style>
+<body ng-app="app" ng-controller="trelloController as trello">
+    <div class="container">
+        <h1>Innovation Crowdsourcing with Trello&trade;</h1>
+       <p><em><strong>Theme for this week:</strong> Nagging problems at work -> what is causing you pain today?</em></p>
+                <h2>How it works</h2>
+                <ol>
+                    <li>Submit ideas or problems to work on</li>
+                    <li>Vote on ideas/problems</li>
+                    <li>Innovation Team (and you?) will work one project into each sprint</li>
+                    <li>We'll report back with what we learned</li>
+                </ol>
+            
+            
+        <h2>SUBMIT IDEA</h2>
+        <div ng-show="trello.authorized() == false">
+            <p>To submit an idea/problem or vote, you must first <button ng-click="trello.authorize()">Authorize Trello</button>.</p>
+            <p>Proxies producing problems? You can <a href="mailto:joegreaser+r9ibx45uhxq3qicnxown@boards.trello.com">email an idea directly to the board</a>.</p>
+
+        </div>
+        <div id="submission" ng-show="trello.submitted == false && trello.authorized() == true">
+        <form ng-submit="trello.submit($event)">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Email" ng-model="trello.email">
+            </div>
+             <div class="form-group">
+                <label for="exampleInputEmail1">Idea/Problem Title</label>
+                <input type="text" class="form-control" id="ideaTitle" placeholder="i.e., 'Fix this Problem'" ng-model="trello.ideaTitle">
+            </div>
+             <div class="form-group">
+                <label for="exampleInputEmail1">Idea/Problem Description</label>
+                <input type="text" class="form-control" id="ideaDescription" placeholder="i.e., 'Fix this Problem'" ng-model="trello.ideaDescription">
+            </div>
+            
+            <button id="submitButton" type="submit" class="btn btn-default">Submit</button>
+           </form>
+        </div>
+        <div id="submitted" ng-show="trello.submitted == true"><p>You submitted something. Want to submit more?</p><button ng-click="trello.resetSubmission()">Submit another idea/problem</button></div>
+
+
+        <h2>VOTE!</h2>
+        <p><a href="https://trello.com/b/eIhkHBuP/innovation-crowdsourcing#" target="_blank">GO VOTE</a></p>
+
+
+    </div>
+</body>
+
+
+</html>

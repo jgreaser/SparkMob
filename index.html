@@ -1,0 +1,168 @@
+<html>
+
+<head>
+    <title>FLVS Innovation Working For You</title>
+</head>
+
+<script src="lib/angular.js"></script>
+
+<script src="lib/ui-bootstrap.js"></script>
+<script src="app.js"></script>
+<script src="trello.controller.js"></script>
+<script src="trello.service.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="https://api.trello.com/1/client.js?key=354728fd3b260ae763e45243a82da439"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
+
+<!---->
+<link href="https://fonts.googleapis.com/css?family=Galada" rel="stylesheet">
+
+<link rel="stylesheet" href="w3.css">
+
+<link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+
+<!---->
+
+<style>
+    .logo {
+        margin-top: 0px;
+        margin-left: 0px;
+    }
+    
+    button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    body {
+        background-color: #333333;
+    }
+    
+    h1,h2 {
+        color: #bfbfbf;
+        font-family: 'Comfortaa', cursive;
+    }
+
+    .w3-sparkyellow{
+      color: #E7F52D;
+    }
+
+    .w3-sparkyellowBackground{
+      background-color: #E7F52D;
+    }
+
+    .w3-comfortaa {
+        font-family: "Comfortaa", cursive;
+    }
+
+    @-webkit-keyframes bounce {0%, 20%, 50%, 80%, 100% {-webkit-transform: translateY(0);}40% {-webkit-transform: translateY(-30px);}60% {-webkit-transform: translateY(-15px);}
+    }
+    @-moz-keyframes bounce {0%, 20%, 50%, 80%, 100% {-moz-transform: translateY(0);}40% {-moz-transform: translateY(-30px);}60% {-moz-transform: translateY(-15px);}
+    }
+    @-o-keyframes bounce {0%, 20%, 50%, 80%, 100% {-o-transform: translateY(0);}40% {-o-transform: translateY(-30px);}60% {-o-transform: translateY(-15px);}
+    }
+    @keyframes bounce {0%, 20%, 50%, 80%, 100% {transform: translateY(0);}40% {transform: translateY(-30px);}60% {transform: translateY(-15px);}
+    }
+
+  .bounce {
+    animation: bounce 2s infinite;
+   -webkit-animation: bounce 2s infinite;
+   -moz-animation: bounce 2s infinite;
+   -o-animation: bounce 2s infinite;
+   }
+
+
+</style>
+<body ng-app="app" ng-controller="trelloController as trello">
+        
+    <div class="w3-row-padding w3-padding-64 w3-container">
+      <div class="w3-content">
+
+            <h1 class="w3-text-white"><img src="img/sparkmob.png" style="width:140px">   SparkMob</h1></br>
+
+            <div class="row w3-padding-medium">
+                <h3 class="w3-sparkyellow w3-comfortaa">This Week's Theme</h3><p class="w3-text-white">Nagging problems at work. What is causing you pain today?</p>
+            </div>
+            <div class="row">
+                <div class="w3-padding-medium w3-col s12 m6 l6">
+                    <h3 class="w3-sparkyellow w3-comfortaa">Submit an Idea</h3>
+                    <div ng-show="trello.authorized() == false">
+                        <p class="w3-text-white">Email your idea to the SparkMob Trello or authorize Trello and submit right from here. The choice is yours.</p> 
+                        <div class="w3-btn-group">
+                            <a href="mailto:joegreaser+r9ibx45uhxq3qicnxown@boards.trello.com"><button class="w3-btn w3-round-xxlarge w3-white" style="width:50%">Email Idea</button></a>
+                            <button class="w3-btn w3-round-xxlarge w3-white" style="width:50%" ng-click="trello.authorize()">Authorize Trello</button>
+                        </div>
+                    </div>
+                    <div id="submission" ng-show="trello.submitted == false && trello.authorized() == true">
+                        <form ng-submit="trello.submit($event)">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="w3-text-light-grey w3-small w3-comfortaa">Email Address</label>
+                                <input type="email" class="form-control" id="email" placeholder="Email" ng-model="trello.email">
+                            </div>
+                             <div class="form-group">
+                                <label for="exampleInputEmail1" class="w3-text-light-grey w3-small w3-comfortaa">Idea / Problem Title</label>
+                                <input type="text" class="form-control" id="ideaTitle" placeholder="i.e., 'Fix this Problem'" ng-model="trello.ideaTitle">
+                            </div>
+                             <div class="form-group">
+                                <label for="exampleInputEmail1" class="w3-text-light-grey w3-small w3-comfortaa">Idea / Problem Description</label>
+                                <input type="text" class="form-control" id="ideaDescription" placeholder="i.e., 'Fix this Problem'" ng-model="trello.ideaDescription">
+                            </div>
+                            <button id="submitButton" type="submit" class="w3-btn w3-round-xxlarge w3-sparkyellowBackground w3-text-black" style="width:100%">Submit this Idea</button>
+                        </form>
+                    </div>
+                    <div id="submitted" ng-show="trello.submitted == true"><p>You submitted something. Want to submit more?</p><button ng-click="trello.resetSubmission()">Submit another idea/problem</button></div>
+                    <a href="https://trello.com/b/eIhkHBuP/innovation-crowdsourcing#" target="_blank"><button class="w3-btn w3-round-xxlarge w3-sparkyellowBackground w3-text-black" style="width:100%" >Vote Existing Ideas Up</button></a>
+                </div>
+                <div class="w3-padding-medium w3-col s12 m6 l6">
+                    <h3 class="w3-sparkyellow w3-comfortaa">What's a SparkMob?</h3><p class="w3-text-white">Flash Mobs brought people together to promote unexpected joy and random dancing. <strong><span class="w3-sparkyellow">SparkMob</span></strong> brings together groups of people to create and elevate the next innovative ideas for FLVS. Let's boogie to the future together!</p></br>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="w3-row w3-center">
+            <h4 class="w3-text-light-grey w3-comfortaa">The Innovation Team     <img src="img/downcheveron.svg" class="bounce" style="width:40px"></h4>
+        </div>
+    </div>
+
+
+
+    <div class="w3-row-padding w3-grey w3-padding-64 w3-container">
+      <div class="w3-content">
+        <div class="row">
+            <h1 class="w3-text-dark-grey w3-center w3-padding-32">The Team</h1>
+        </div>
+        <div class="row">
+            <div class="w3-col s12 m4 l4 w3-center">
+              <h3 class="w3-sparkyellow w3-comfortaa">Joe Greaser</h3>
+              <img src="img/sparkmob.png" class="w3-round"></br>
+              <p>Something about this person</p></br>
+              <a href="mailto:jgreaser@flvs.net"><button class="w3-btn w3-round-xxlarge w3-white w3-center" style="width:50%">Email Joe</button></a>
+            </div>
+            <div class="w3-col s12 m4 l4 w3-center">
+              <h3 class="w3-sparkyellow w3-comfortaa">Mike Jarrell</h3>
+              <img src="img/sparkmob.png" class="w3-round"></br>
+              <p>Something about this person</p></br>
+              <a href="mailto:mjarrell@flvs.net"><button class="w3-btn w3-round-xxlarge w3-white w3-center" style="width:50%">Email Mike</button></a>
+            </div>
+            <div class="w3-col s12 m4 l4 w3-center">
+              <h3 class="w3-sparkyellow w3-comfortaa">TD Haines</h3>
+              <img src="img/sparkmob.png" class="w3-round"></br>
+              <p>Something about this person</p></br>
+              <a href="mailto:thaines@flvs.net"><button class="w3-btn w3-round-xxlarge w3-white w3-center" style="width:50%">Email TD</button></a>
+            </div>
+      </div>
+    </div>
+
+
+
+
+
+</body>
+
+
+</html>
